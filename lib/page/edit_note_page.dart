@@ -35,7 +35,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          actions: [buildButton()],
+          actions: [buildButton(context)],
         ),
         body: Form(
           key: _formKey,
@@ -44,27 +44,26 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
             number: number,
             title: title,
             description: description,
-            onChangedImportant: (isImportant) =>
-                setState(() => this.isImportant = isImportant),
+            onChangedImportant: (isImportant) => setState(() => this.isImportant = isImportant),
             onChangedNumber: (number) => setState(() => this.number = number),
             onChangedTitle: (title) => setState(() => this.title = title),
-            onChangedDescription: (description) =>
-                setState(() => this.description = description),
+            onChangedDescription: (description) => setState(() => this.description = description),
           ),
         ),
       );
 
-  Widget buildButton() {
+  Widget buildButton(BuildContext context) {
     final isFormValid = title.isNotEmpty && description.isNotEmpty;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: isFormValid ? null : Colors.grey.shade700,
+          foregroundColor: isFormValid ? Theme.of(context).colorScheme.onSurface : Colors.grey.shade700,
+          backgroundColor: isFormValid ? Theme.of(context).colorScheme.primary : Colors.grey.shade700,
+          elevation: 0,
         ),
-        onPressed: addOrUpdateNote,
+        onPressed: isFormValid ? addOrUpdateNote : null,
         child: const Text('Save'),
       ),
     );
@@ -100,7 +99,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
   Future addNote() async {
     final note = Note(
       title: title,
-      isImportant: true,
+      isImportant: isImportant,
       number: number,
       description: description,
       createdTime: DateTime.now(),

@@ -23,22 +23,19 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
   @override
   void initState() {
     super.initState();
-
     refreshNote();
   }
 
   Future refreshNote() async {
     setState(() => isLoading = true);
-
     note = await NotesDatabase.instance.readNote(widget.noteId);
-
     setState(() => isLoading = false);
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          actions: [editButton(), deleteButton()],
+          actions: [editButton(context), deleteButton(context)],
         ),
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
@@ -49,42 +46,38 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
                   children: [
                     Text(
                       note.title,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.headline5,
                     ),
                     const SizedBox(height: 8),
                     Text(
                       DateFormat.yMMMd().format(note.createdTime),
-                      style: const TextStyle(color: Colors.white38),
+                      style: Theme.of(context).textTheme.subtitle1,
                     ),
                     const SizedBox(height: 8),
                     Text(
                       note.description,
-                      style:
-                          const TextStyle(color: Colors.white70, fontSize: 18),
+                      style: Theme.of(context).textTheme.bodyText2,
                     )
                   ],
                 ),
               ),
       );
 
-  Widget editButton() => IconButton(
-      icon: const Icon(Icons.edit_outlined),
-      onPressed: () async {
-        if (isLoading) return;
+  Widget editButton(BuildContext context) => IconButton(
+        icon: Icon(Icons.edit_outlined, color: Theme.of(context).iconTheme.color),
+        onPressed: () async {
+          if (isLoading) return;
 
-        await Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => AddEditNotePage(note: note),
-        ));
+          await Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => AddEditNotePage(note: note),
+          ));
 
-        refreshNote();
-      });
+          refreshNote();
+        },
+      );
 
-  Widget deleteButton() => IconButton(
-        icon: const Icon(Icons.delete),
+  Widget deleteButton(BuildContext context) => IconButton(
+        icon: Icon(Icons.delete, color: Theme.of(context).iconTheme.color),
         onPressed: () async {
           await NotesDatabase.instance.delete(widget.noteId);
 

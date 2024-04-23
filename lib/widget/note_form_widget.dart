@@ -46,45 +46,44 @@ class NoteFormWidget extends StatelessWidget {
                   )
                 ],
               ),
-              buildTitle(),
+              buildTitle(context),
               const SizedBox(height: 8),
-              buildDescription(),
+              buildDescription(context),
               const SizedBox(height: 16),
             ],
           ),
         ),
       );
 
-  Widget buildTitle() => TextFormField(
+  Widget buildTitle(BuildContext context) => TextFormField(
         maxLines: 1,
         initialValue: title,
-        style: const TextStyle(
-          color: Colors.white70,
+        style: TextStyle(
+          color: Theme.of(context).textTheme.headline6?.color,
           fontWeight: FontWeight.bold,
           fontSize: 24,
         ),
-        decoration: const InputDecoration(
+        decoration: InputDecoration(
           border: InputBorder.none,
           hintText: 'Title',
-          hintStyle: TextStyle(color: Colors.white70),
+          hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,
         ),
         validator: (title) =>
             title != null && title.isEmpty ? 'The title cannot be empty' : null,
         onChanged: onChangedTitle,
       );
 
-  Widget buildDescription() => TextFormField(
+  Widget buildDescription(BuildContext context) => TextFormField(
         maxLines: 5,
         initialValue: description,
-        style: const TextStyle(color: Colors.white60, fontSize: 18),
-        decoration: const InputDecoration(
+        style: Theme.of(context).textTheme.subtitle1,
+        decoration: InputDecoration(
           border: InputBorder.none,
           hintText: 'Type something...',
-          hintStyle: TextStyle(color: Colors.white60),
+          hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,
         ),
-        validator: (title) => title != null && title.isEmpty
-            ? 'The description cannot be empty'
-            : null,
+        validator: (description) =>
+            description != null && description.isEmpty ? 'The description cannot be empty' : null,
         onChanged: onChangedDescription,
       );
 }
